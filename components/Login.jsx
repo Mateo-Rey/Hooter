@@ -1,0 +1,22 @@
+import React from 'react'
+
+import {BsTwitter} from 'react-icons/bs'
+import {FcGoogle} from 'react-icons/fc'
+
+function Login() {
+  return (
+    <div className='grid grid-cols-2'>
+        <div className=' bg-blue-500 h-screen grid place-items-center'>
+            <BsTwitter className='text-white text-[200px]'/>
+        </div>
+       <div className='grid place-items-center'>
+        <div className='flex gap-4 bg-white p-4 px-6 items-center rounded-[6px] cursor-pointer'>
+            <FcGoogle className='text-[30px]'/>
+            Signin With Google
+        </div>
+       </div>
+    </div>
+  )
+}
+
+export default Login

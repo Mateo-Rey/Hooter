@@ -32,7 +32,7 @@ function Sidebar() {
       <button className="hidden xl:inline ml-auto bg-[#1d9bf0] text-white rounded-full w-52 h-[52px] text-lg font-bold hover:bg-[#1a8cd8] ">
         Tweet
       </button>
-      <div className="text-[#d9d9d9] flex items-center justify-center mt-auto hoverEffect xl:ml-auto xl:mr-3 xl:mb-3 px-4 py-2" onClick={signOut}>
+      <div className="text-[#d9d9d9] flex items-center justify-center mt-auto hoverEffect xl:ml-auto xl:mr-2 xl:mb-5 px-4 py-2" onClick={signOut}>
         <img src={session?.user?.image} alt="profile" className="h-10 w-10 rounded-full xl:mr-2.5"/>
         <div className="hidden xl:inline leading-5 ">
             <h4 className="font-bold">{session?.user?.name}</h4>

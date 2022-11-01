@@ -113,7 +113,7 @@ const Post = ({ id, post }) => {
           {post?.tags?.map((tag) => {
             return <p key={tag} className="text-blue-300">#{tag}</p>;
           })}
-          <video loop src={post?.video} autoPlay controls></video>
+          <video loop src={post?.video} controls></video>
 
           <div className="flex justify-between text-[20px] mt-4 w-[80%]">
             <div className="flex gap-1 items-center">

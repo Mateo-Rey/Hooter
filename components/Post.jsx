@@ -111,7 +111,7 @@ const Post = ({ id, post }) => {
             />
           )}
           {post?.tags?.map((tag) => {
-            return <p className="text-blue-300">#{tag}</p>;
+            return <p key={tag} className="text-blue-300">#{tag}</p>;
           })}
           <video loop src={post?.video} autoPlay controls></video>
 

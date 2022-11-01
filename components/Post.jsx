@@ -1,27 +1,34 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { BsChat } from "react-icons/bs"
-import { FaRetweet } from "react-icons/fa"
-import { AiOutlineHeart, AiOutlineShareAlt, AiFillHeart } from 'react-icons/ai'
-import { RiDeleteBin5Line } from 'react-icons/ri'
-import Moment from 'react-moment'
+import React, { useContext, useEffect, useState } from "react";
+import { BsChat } from "react-icons/bs";
+import { FaRetweet } from "react-icons/fa";
+import { AiOutlineHeart, AiOutlineShareAlt, AiFillHeart } from "react-icons/ai";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import Moment from "react-moment";
 
-import { db } from "../firebase"
-import { useRouter } from 'next/router'
-import { collection, deleteDoc, doc, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore'
-import { useSession } from "next-auth/react"
-import { AppContext } from '../contexts/AppContext'
-
+import { db } from "../firebase";
+import { useRouter } from "next/router";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+} from "firebase/firestore";
+import { useSession } from "next-auth/react";
+import { AppContext } from "../contexts/AppContext";
+import { getMetadata } from "firebase/storage";
 
 const Post = ({ id, post }) => {
+  const [likes, setLikes] = useState([]);
+  const [liked, setLiked] = useState(false);
+  const [comments, setComments] = useState([]);
 
-  const [likes, setLikes] = useState([])
-  const [liked, setLiked] = useState(false)
-  const [comments, setComments] = useState([])
+  const { data: session } = useSession();
+  const router = useRouter();
 
-  const { data: session } = useSession()
-  const router = useRouter()
-
-  const [appContext, setAppContext] = useContext(AppContext)
+  const [appContext, setAppContext] = useContext(AppContext);
 
   useEffect(
     () =>
@@ -33,7 +40,7 @@ const Post = ({ id, post }) => {
         (snapshot) => setComments(snapshot.docs)
       ),
     [db, id]
-  )
+  );
 
   useEffect(
     () =>
@@ -41,13 +48,15 @@ const Post = ({ id, post }) => {
         setLikes(snapshot.docs)
       ),
     [db, id]
-  )
+  );
 
-  useEffect(() =>
-    setLiked(
-      likes.findIndex((like) => like.id === session?.user?.uid) !== -1
-    ), [likes]
-  )
+  useEffect(
+    () =>
+      setLiked(
+        likes.findIndex((like) => like.id === session?.user?.uid) !== -1
+      ),
+    [likes]
+  );
 
   const likePost = async () => {
     if (liked) {
@@ -57,87 +66,107 @@ const Post = ({ id, post }) => {
         username: session.user.name,
       });
     }
-  }
+  };
 
   const openModal = () => {
     setAppContext({
-      ...appContext, 
+      ...appContext,
       isModalOpen: true,
       post,
-      postId: id
-    })
-
-    console.log('opening model ', appContext.post);
-  }
+      postId: id,
+    });
+  };
 
   return (
-    <div className='mt-4 border-t border-gray-500 px-4 pt-6 pb-4 cursor-pointer' onClick={() => router.push(`/${id}`)}>
-      <div className='grid grid-cols-[48px,1fr] gap-4'>
-
+    <div
+      className="mt-4 border-t border-gray-500 px-4 pt-6 pb-4 cursor-pointer"
+      onClick={() => router.push(`/${id}`)}
+    >
+      <div className="grid grid-cols-[48px,1fr] gap-4">
         <div>
-          <img className='h-12 w-12 rounded-full object-cover' src={post?.userImg} alt="" />
+          <img
+            className="h-12 w-12 rounded-full object-cover"
+            src={post?.userImg}
+            alt=""
+          />
         </div>
 
         <div>
-          <div className='block sm:flex gap-1'>
-            <h1 className='font-medium'>{post?.username}</h1>
+          <div className="block sm:flex gap-1">
+            <h1 className="font-medium">{post?.username}</h1>
 
-            <div className='flex'>
-              <p className='text-gray-500'>@{post?.tag} &nbsp;·&nbsp;</p>
-              <p className='text-gray-500'>
+            <div className="flex">
+              <p className="text-gray-500">@{post?.tag} &nbsp;·&nbsp;</p>
+              <p className="text-gray-500">
                 <Moment fromNow>{post?.timestamp?.toDate()}</Moment>
               </p>
             </div>
-
-
           </div>
           <p>{post?.text}</p>
-          <img
-            className='max-h-[450px] object-cover rounded-[20px] mt-2'
-            src={post?.image}
-            alt="" />
+          {post?.image && (
+            <img
+              className="max-h-[450px] object-cover rounded-[20px] mt-2"
+              src={post?.image}
+              alt=""
+            />
+          )}
+          {post?.tags?.map((tag) => {
+            return <p className="text-blue-300">#{tag}</p>;
+          })}
+          <video loop src={post?.video} autoPlay controls></video>
 
-
-          <div className='flex justify-between text-[20px] mt-4 w-[80%]'>
-
-            <div className='flex gap-1 items-center'>
-              <BsChat className='hoverEffect w-7 h-7 p-1' onClick={(e) => {
-                e.stopPropagation()
-                openModal()
-              }} />
-              {comments.length > 0 && (<span className='text-sm'>{comments.length}</span>)}
+          <div className="flex justify-between text-[20px] mt-4 w-[80%]">
+            <div className="flex gap-1 items-center">
+              <BsChat
+                className="hoverEffect w-7 h-7 p-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openModal();
+                }}
+              />
+              {comments.length > 0 && (
+                <span className="text-sm">{comments.length}</span>
+              )}
             </div>
 
             {session.user.uid !== post?.id ? (
-              <FaRetweet className='hoverEffect w-7 h-7 p-1' />
+              <FaRetweet className="hoverEffect w-7 h-7 p-1" />
             ) : (
-              <RiDeleteBin5Line className='hoverEffect w-7 h-7 p-1'
+              <RiDeleteBin5Line
+                className="hoverEffect w-7 h-7 p-1"
                 onClick={(e) => {
                   e.stopPropagation();
                   deleteDoc(doc(db, "posts", id));
-                }} />
+                }}
+              />
             )}
 
-
-            <div className='flex gap-1 items-center'
+            <div
+              className="flex gap-1 items-center"
               onClick={(e) => {
-                e.stopPropagation()
-                likePost()
-              }}>
-              {liked ? <AiFillHeart className='hoverEffect w-7 h-7 p-1 text-pink-700' />
-                : <AiOutlineHeart className='hoverEffect w-7 h-7 p-1' />}
+                e.stopPropagation();
+                likePost();
+              }}
+            >
+              {liked ? (
+                <AiFillHeart className="hoverEffect w-7 h-7 p-1 text-pink-700" />
+              ) : (
+                <AiOutlineHeart className="hoverEffect w-7 h-7 p-1" />
+              )}
 
-              {likes.length > 0 && (<span className={`${liked && "text-pink-700"} text-sm`}>{likes.length}</span>)}
+              {likes.length > 0 && (
+                <span className={`${liked && "text-pink-700"} text-sm`}>
+                  {likes.length}
+                </span>
+              )}
             </div>
 
-            <AiOutlineShareAlt className='hoverEffect w-7 h-7 p-1' />
+            <AiOutlineShareAlt className="hoverEffect w-7 h-7 p-1" />
           </div>
-
         </div>
-
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Post
+export default Post;

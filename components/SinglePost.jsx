@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { BsArrowLeft } from "react-icons/bs"
 import Input from './Input'
 import Post from './Post'
@@ -6,9 +6,11 @@ import { onSnapshot, collection, query, orderBy, doc } from "firebase/firestore"
 import { db } from "../firebase";
 import { useRouter } from 'next/router';
 import Comment from './Comment';
+import { AppContext } from '../contexts/AppContext';
+import ReplyModal from './ReplyModal';
 
 const SinglePost = () => {
-
+    const [appContext, setAppContext] = useContext(AppContext)
     const [post, setPost] = useState([])
     const router = useRouter()
     const { id } = router.query;
@@ -48,15 +50,16 @@ const SinglePost = () => {
                     <div className="pb-72">
                         {comments.map((comment) => (
                             <Comment
+                                post={post}
                                 key={comment.id}
-                                id={comment.id}
+                                id={id}
                                 comment={comment.data()}
                             />
                         ))}
                     </div>
                 )}
             </div>
-
+            {appContext.isReplyModalOpen && <ReplyModal />}
 
         </section>
     )

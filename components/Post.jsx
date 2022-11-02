@@ -80,7 +80,7 @@ const Post = ({ id, post }) => {
   return (
     <div
       className="mt-4 border-t border-gray-500 px-4 pt-6 pb-4 cursor-pointer"
-      onClick={() => router.push(`/${id}`)}
+      onClick={() => router.push(`/posts/${id}`)}
     >
       <div className="grid grid-cols-[48px,1fr] gap-4">
         <div>

@@ -8,6 +8,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi"
 import { useSession } from 'next-auth/react'
 import { AppContext } from '../contexts/AppContext'
 import Moment from 'react-moment'
+import { uuidv4 } from '@firebase/util'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { db } from '../firebase'
 import { useRouter } from 'next/router'
@@ -30,6 +31,7 @@ const Modal = () => {
         e.preventDefault();
 
         await addDoc(collection(db, "posts", appContext.postId, "comments"), {
+          id: uuidv4(),
           comment: input,
           username: session.user.name,
           tag: session.user.tag,

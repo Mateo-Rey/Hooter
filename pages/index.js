@@ -7,12 +7,12 @@ import Modal from '../components/Modal'
 import Sidebar from '../components/Sidebar'
 import Trending from "../components/Trending"
 import { AppContext } from '../contexts/AppContext'
-
+import ReplyModal from '../components/ReplyModal'
 export default function Home() {
 
   const { data: session } = useSession()
   const [appContext] = useContext(AppContext)
-
+  
   if (!session) return <Login />
 
   return (
@@ -29,6 +29,7 @@ export default function Home() {
           <Feed />
           <Trending />
           {appContext?.isModalOpen && <Modal />}
+          
         </div>
       </main>
 

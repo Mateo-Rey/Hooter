@@ -1,10 +1,22 @@
 import { BiDotsHorizontalRounded } from "react-icons/bi"
+import { useContext } from "react"
 import { AiOutlineHeart, AiFillHeart, AiOutlineShareAlt } from "react-icons/ai"
 import { HiOutlineSwitchHorizontal } from "react-icons/hi"
 import { BsBarChart, BsTrash, BsChatDots } from "react-icons/bs"
+import { AppContext } from "../contexts/AppContext";
 import Moment from "react-moment";
 
-function Comment({ comment }) {
+function Comment({ comment, id, post }) {
+    const [appContext, setAppContext] = useContext(AppContext);
+    const openModal = () => {
+        setAppContext({
+          ...appContext,
+          isReplyModalOpen: true,
+          comment,
+          post,
+          postId: id,
+        });
+      };
     return (
         <div className="p-3 flex cursor-pointer border-b border-gray-700">
             <img
@@ -37,7 +49,11 @@ function Comment({ comment }) {
                 </div>
 
                 <div className="text-[#6e767d] flex justify-between w-10/12">
-                    <div className="icon group">
+                    <div className="icon group" onClick={(e) => {
+                        e.stopPropagation()
+                        openModal()
+                        console.log("modal")
+                    }}>
                         <BsChatDots className="h-5 group-hover:text-[#1d9bf0]" />
                     </div>
 

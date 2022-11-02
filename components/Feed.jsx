@@ -8,7 +8,7 @@ import { db } from "../firebase";
 const Feed = () => {
 
   const [posts, setPosts] = useState([])
-
+  console.log(posts[0]?.id)
   useEffect(
     () =>
       onSnapshot(

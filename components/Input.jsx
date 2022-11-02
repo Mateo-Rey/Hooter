@@ -119,7 +119,7 @@ const Input = () => {
           <div>
             {tagList &&
               tagList.map((tag) => {
-                return <div key={tag}>{tag}</div>;
+                return <div className='text-blue-300' key={tag}>#{tag}</div>;
               })}
           </div>
 

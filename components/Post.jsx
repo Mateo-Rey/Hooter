@@ -110,9 +110,7 @@ const Post = ({ id, post }) => {
               alt=""
             />
           )}
-          {post?.tags?.map((tag) => {
-            return <p key={tag} className="text-blue-300">#{tag}</p>;
-          })}
+          {post?.tags && post.tags.map((tag) => <p className="text-blue-300" key={tag}>#{tag}</p>)}
           {post?.video && <video loop src={post?.video} controls></video>}
 
           <div className="flex justify-between text-[20px] mt-4 w-[80%]">

@@ -73,14 +73,14 @@ const Input = () => {
     const imageRef = ref(storage, `posts/${docRef.id}/image`);
     const videoRef = ref(storage, `posts/${docRef.id}/video`)
   
-    if (selectedFile.slice(5,10) === 'image') {
+    if (selectedFile?.slice(5,10) === 'image') {
       await uploadString(imageRef, selectedFile, "data_url").then(async () => {
         const downloadURL = await getDownloadURL(imageRef);
         await updateDoc(doc(db, "posts", docRef.id), {
           image: downloadURL,
         });
       });
-    } else if (selectedFile.slice(5,10) === 'video') {
+    } else if (selectedFile?.slice(5,10) === 'video') {
       await uploadString(videoRef, selectedFile, "data_url").then(async () => {
         const downloadURL = await getDownloadURL(videoRef);
         await updateDoc(doc(db, "posts", docRef.id), {
@@ -184,7 +184,7 @@ const Input = () => {
               className=" text-black placeholder-black bg-blue-400 rounded outline-none"
               id="tagInput"
               placeholder="Enter a tag..."
-              value={tag}
+              
               onChange={(e) => setTag(e.target.value)}
               onKeyUp={(e) => handleTagAdd(e)}
             />

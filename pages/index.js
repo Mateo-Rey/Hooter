@@ -20,7 +20,7 @@ export default function Home() {
       <Head>
         <title>Hooter</title>
         <meta name="description" content="Video and image sharing app" />
-        <link rel='icon' href='../public/favicon.ico'/>
+        <link rel='icon' href='%PUBLIC_URL%/manifest.json'/>
       </Head>
 
       <main className='relative max-w-[1400px] mx-auto'>
